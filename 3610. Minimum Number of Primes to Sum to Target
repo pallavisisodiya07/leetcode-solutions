@@ -1,0 +1,48 @@
+class Solution {
+public:
+    bool isPrime(int num) {
+        if (num < 2) return false;
+        for (int i = 2; i * i <= num; ++i)
+            if (num % i == 0)
+                return false;
+        return true;
+    }
+
+    unordered_map<int, int> hMap;
+
+    // Returns the count of primes needed to sum to 'num',
+    // where base case returns 1 for num == 0 (counting the last prime).
+    int helper(int num, vector<int>& primes) {
+        if (num == 0) return 1;      // Base case: 1 prime counted here
+        if (num < 0) return INT_MAX; // Impossible case
+        if (hMap.find(num) != hMap.end()) return hMap[num];
+
+        int count = INT_MAX;
+
+        for (int i = 0; i < primes.size(); i++) {
+            int res = helper(num - primes[i], primes);
+            if (res != INT_MAX) {
+                // Since base case already counts 1 for the prime,
+                // we add zero here to avoid double counting
+                count = min(count, res);
+            }
+        }
+
+        return hMap[num] = count;
+    }
+
+    int minNumberOfPrimes(int n, int m) {
+        vector<int> primes;
+        int num = 2;
+        while (primes.size() < m) {
+            if (isPrime(num)) {
+                primes.push_back(num);
+            }
+            num++;
+        }
+
+       int result = helper(n, primes);
+        if (result == INT_MAX) return -1;
+        return result - 1;
+    }
+};
