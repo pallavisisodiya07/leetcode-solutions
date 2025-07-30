@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int a = 0, b = 0;
+        int res = 0;
+        while (b < s.size()) {
+            unordered_set<char> hMap;
+            int count = 0;
+            for (int i = a; i < s.size(); i++) {
+                if (hMap.find(s[i]) != hMap.end()) {
+                    a++;
+                    break;
+                } else {
+                    hMap.insert(s[i]);
+                    count++;
+                }
+            }
+            res = max(res, count);
+            b++;
+        }
+        return res;
+    }
+};
